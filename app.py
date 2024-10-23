@@ -1,8 +1,13 @@
 import streamlit as st
 import assemblyai as aai
+import os
+from dotenv import load_dotenv
 
-# Set your AssemblyAI API key
-aai.settings.api_key = "948c98056fd4450ebbae41eafcdffaf8"
+# Load the .env file to get the API key
+load_dotenv()
+
+# Get the API key from the environment variable
+aai.settings.api_key = os.getenv("ASSEMBLYAI_API_KEY")
 
 # Streamlit app title
 st.title("Speech to Text with Speaker Diarization and Summary")
@@ -39,7 +44,6 @@ if audio_file is not None:
         # Lemur LLM integration to summarize the transcript
         st.write("Summarizing the transcript with Lemur...")
 
-        # Proper formatting for the multiline prompt
         prompt = (
             "You are an AI designed to quickly summarize and categorize conversations. "
             "Your task is to provide a brief analysis of the conversation.\n\n"
@@ -53,7 +57,6 @@ if audio_file is not None:
                 prompt, final_model=aai.LemurModel.claude3_5_sonnet
             )
 
-            # Check if Lemur responded with a result
             if result:
                 st.write("### Summary of the Transcript:")
                 st.write(result.response)
